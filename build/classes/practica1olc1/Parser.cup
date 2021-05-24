@@ -1,0 +1,64 @@
+package practica1olc1;
+
+import java_cup.runtime.*;
+import java.io.FileReader;
+import javax.swing.JOptionPane;
+
+parser code {:
+
+    public static Nodo raiz;
+
+/*** Reporte de error encontrado. rigth left ***/
+
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error");
+        if (info instanceof java_cup.runtime.Symbol){
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left == 0) {                
+                m.append(" in line "+(s.left+1));
+                if (s.right == 0){
+                    m.append(", column "+(s.right+1));
+                }             
+            }
+        }
+        m.append(" : "+message);
+		JOptionPane.showMessageDialog(null, "Error sintactico no se esperaba " + m);
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+
+
+/****************************  METODO PARA ANALIZAR UNA CADENA  *************************/
+
+    public static void AnalizarGramatica(String[] args){
+        try {
+            Sintactico analizadorsin = new Sintactico( new Lexico(new FileReader(args[0])));
+            Object result = analizadorsin.parse().value;
+            System.out.println("\n\n****Analisis Realizado con exito****");
+            
+            if(raiz != null){
+                JOptionPane.showMessageDialog(null, "El archivo no tiene errores");
+            }else{
+                JOptionPane.showMessageDialog(null, "El archivo contiene errores");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    
+    }
+
+:};
+
+/*************************************************** TERMINALELS ***********************************************************/
+
+terminal String         tMenor,tMenorI,tMayor,tMayorI,tIgual,tNoIgual,tAnd,tOr,tNot,tMas,tMenos,tPor,tDiv,tAmberson,
+                        tPAbre,tPCierra,tCAbre,tCCierra,tComa,tModule,tEnd,tPublic,tPrivate,tDim,tStatic,tBoolean,
+                        tChar,tDouble,tInteger,tLong,tString,tAs,tSub,tByVal,tMain,tFunction,tReturn,tIf,tThen,
+                        tElse,tElseIf,tWhile,tFor,tTo,tStep,tNext,tExit,tDo,tLoop,tUntil,tSelect,tCase,tBreak,
+                        tConsole,tWriteLine,tReadLine,TabLn,tID,tNumero,tDecimal,tCadena
+                        ;
+
